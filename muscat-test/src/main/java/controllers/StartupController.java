@@ -9,6 +9,6 @@ public class StartupController {
     @RequestMapping("/")
     public String index()
     {
-        return "Start spring boot!";
+        return "Start spring bootxxxx!";
     }
 }
