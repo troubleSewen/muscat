@@ -6,14 +6,60 @@ jobs:
 
     environment:
       MAVEN_OPTS: -Xmx3200m
-    
+
     steps:
       - checkout
-      - run: ./mvnw clean test
 
-#workflows:
-#  version: 2
-#  build_and_test:
-#    jobs:
-#      - build
-#      - test
+      - restore_cache:
+          key: muscat-{{ checksum "pom.xml" }}
+
+      - run: mvn dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: muscat-{{ checksum "pom.xml" }}
+
+      - run: ./mvnw clean pacakge
+
+#      - store_test_results:
+#          path: muscat-test/target/surefire-reports
+#
+#      - store_artifacts:
+#          path: muscat-test/target/muscat-0.0.1-SNAPSHOT.jar
+
+  test:
+    docker:
+      - image: circleci/openjdk:8-jdk
+
+    environment:
+      MAVEN_OPTS: -Xmx3200m
+
+    steps:
+      - run: ./mvnw verify
+
+#  deploy:
+#    docker:
+#      - image: circleci/openjdk:8-jdk
+#
+#    environment:
+#      MAVEN_OPTS: -Xmx3200m
+#
+#    steps:
+#      - run: ./mvnw deploy
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+        requires:
+          -build
+      - hold:
+          type: approval
+          requires:
+           - test
+      - deploy:
+          requires:
+            - hold
