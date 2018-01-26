@@ -20,7 +20,7 @@ jobs:
             - ~/.m2
           key: muscat-{{ checksum "pom.xml" }}
 
-      - run: ./mvnw clean pacakge
+      - run: ./mvnw clean package
 
 #      - store_test_results:
 #          path: muscat-test/target/surefire-reports
