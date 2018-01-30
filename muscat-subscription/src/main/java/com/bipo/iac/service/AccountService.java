@@ -13,8 +13,4 @@ public interface AccountService {
     EndUserAccount findUserByMobileNo(String mobileNo);
 
     EndUserAccount findUserByUserName(String userName);
-
-    void saveUser(EndUserAccount user);
-
-    void saveCustomer(CustomerAccount customer);
 }

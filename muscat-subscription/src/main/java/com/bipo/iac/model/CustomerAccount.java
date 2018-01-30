@@ -1,5 +1,7 @@
 package com.bipo.iac.model;
 
+import com.bipo.iac.repository.AccountRepository;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,5 +34,10 @@ public class CustomerAccount {
     public String getSubmitDate() {
         SimpleDateFormat dateFormatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormatFull.format(submitDate);
+    }
+
+    public void save(AccountRepository accountRepository) {
+//        accountRepository.saveCustomerAccount(this);
+
     }
 }

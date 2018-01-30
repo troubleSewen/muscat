@@ -1,5 +1,7 @@
 package com.bipo.iac.model;
 
+import com.bipo.iac.repository.AccountRepository;
+
 public class EndUserAccount {
     private String name;
     private String mobileNo;
@@ -9,5 +11,9 @@ public class EndUserAccount {
         this.name = name;
         this.mobileNo = mobileNo;
         this.password = password;
+    }
+
+    public void save(AccountRepository accountRepository) {
+
     }
 }
