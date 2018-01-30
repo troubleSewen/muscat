@@ -1,18 +1,47 @@
 version: 2
+
+#machine:
+#  services:
+#    - docker
+
 jobs:
   build:
+#   CircleCI pre-built docker images on https://circleci.com/docs/2.0/circleci-images/
     docker:
       - image: circleci/openjdk:8-jdk
+#      - image: circleci/mysql:5.7.18
+#      - image: circleci/ruby:2.3
 
     environment:
       MAVEN_OPTS: -Xmx3200m
 
     steps:
       - checkout
-      - run: ./mvnw clean test
+
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "pom.xml" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: ./mvnw -s ./.circleci/settings.xml dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+
+      - run: ./mvnw clean install
+
+#  test:
+#    steps:
+#      - run: ./mvnw integration-test
 
 workflows:
   version: 2
-  build_only:
+  build_and_test:
     jobs:
       - build
+#      - test
