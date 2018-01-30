@@ -1,4 +1,4 @@
-package dto;
+package com.bipo.iac.dto;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

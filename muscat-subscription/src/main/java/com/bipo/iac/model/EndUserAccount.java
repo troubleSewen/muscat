@@ -1,4 +1,4 @@
-package model;
+package com.bipo.iac.model;
 
 public class EndUserAccount {
     private String name;

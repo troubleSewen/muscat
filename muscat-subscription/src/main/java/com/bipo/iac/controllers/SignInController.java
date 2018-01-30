@@ -1,9 +1,9 @@
-package controllers;
+package com.bipo.iac.controllers;
 
-import model.CustomerAccount;
-import model.EndUserAccount;
+import com.bipo.iac.model.CustomerAccount;
+import com.bipo.iac.model.EndUserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
-import service.AccountService;
+import com.bipo.iac.service.AccountService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SignInController {
+
     @Autowired
-    private AccountService AccountService;
+    private AccountService accountService;
 
     @RequestMapping(value = "/subscription/registration", method = RequestMethod.POST)
     public String SignIn(@RequestParam(value = "companyName") String companyName,
@@ -23,8 +24,8 @@ public class SignInController {
                          @RequestParam(value = "password") String password,
                          @RequestParam(value = "mobileNo") String mobileNo) {
 
-        EndUserAccount userExists = AccountService.findUserByUserName(userName);
-        EndUserAccount mobileNoExists = AccountService.findUserByMobileNo(mobileNo);
+        EndUserAccount userExists = accountService.findUserByUserName(userName);
+        EndUserAccount mobileNoExists = accountService.findUserByMobileNo(mobileNo);
         if (mobileNoExists != null) {
             return "There is already a user registered with the mobileNo provided";
         }
@@ -35,8 +36,8 @@ public class SignInController {
 
         CustomerAccount customer = new CustomerAccount(companyName, companyScale, companyAddress);
         EndUserAccount user = new EndUserAccount(userName, mobileNo, password);
-        AccountService.saveUser(user);
-        AccountService.saveCustomer(customer);
+        accountService.saveUser(user);
+        accountService.saveCustomer(customer);
 
         return customer.getCompanyName() + " Registration submitted successfully on " + customer.getSubmitDate();
     }
