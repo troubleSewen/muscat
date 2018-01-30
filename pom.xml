@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>muscat-test</module>
+		<module>muscat-subscription</module>
 	</modules>
 
 	<parent>
