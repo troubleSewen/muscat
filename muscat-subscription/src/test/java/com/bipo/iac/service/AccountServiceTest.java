@@ -5,7 +5,6 @@ import com.bipo.iac.exceptions.MobileRegisteredException;
 import com.bipo.iac.model.CompanyInformation;
 import com.bipo.iac.model.ContactInformation;
 import com.bipo.iac.model.EndUserAccount;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class AccountServiceTest {
         assertThat(abc.length() == 1, is(true));
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void each_registration_should_produce_one_account() throws MobileRegisteredException {
         RegistrationDTO registrationDTO = new RegistrationDTO(
@@ -45,7 +44,7 @@ public class AccountServiceTest {
 
         accountService.process(companyInfo, contactInfo);
 
-        EndUserAccount userAccount = accountService.findUserByMobileNo(contactInfo.getMobile());
+        EndUserAccount userAccount = accountService.findEUAByMobile(contactInfo.getMobile());
         assertThat(userAccount, notNullValue());
     }
 }

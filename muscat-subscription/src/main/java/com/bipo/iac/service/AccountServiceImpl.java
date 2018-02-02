@@ -5,42 +5,38 @@ import com.bipo.iac.model.CompanyInformation;
 import com.bipo.iac.model.ContactInformation;
 import com.bipo.iac.model.CustomerAccount;
 import com.bipo.iac.model.EndUserAccount;
-import com.bipo.iac.repository.AccountRepository;
+import com.bipo.iac.repository.CustomerAccountRepository;
+import com.bipo.iac.repository.EndUserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private EndUserAccountRepository endUserAccountRepository;
+
+    @Autowired
+    private CustomerAccountRepository customerAccountRepository;
 
     @Override
     public boolean process(CompanyInformation companyInformation, ContactInformation contactInformation) throws MobileRegisteredException {
         CustomerAccount customerAccount = new CustomerAccount(companyInformation.getCompanyName(), companyInformation.getCompanyScale(), companyInformation.getCompanyAddress());
-        customerAccount.save(accountRepository);
+        customerAccountRepository.save(customerAccount);
 
-        EndUserAccount mobileNoExists = findUserByMobileNo(contactInformation.getMobile());
-        if (mobileNoExists != null) {
+        EndUserAccount euAccount = findEUAByMobile(contactInformation.getMobile());
+        if (euAccount != null) {
             throw new MobileRegisteredException();
         }
         EndUserAccount user = new EndUserAccount(contactInformation.getUserName(), contactInformation.getMobile(), contactInformation.getPassword());
-
-        user.save(accountRepository);
+        endUserAccountRepository.save(user);
 
         return true;
     }
 
     @Override
-    public EndUserAccount findUserByMobileNo(String mobileNo) {
-        if(accountRepository.hasUserWithMobile(mobileNo)){
-            return accountRepository.getUserBy(mobileNo);
-        }
-        return null;
-    }
-
-    @Override
-    public EndUserAccount findUserByUserName(String userName) {
-        return null;
+    public EndUserAccount findEUAByMobile(String mobileNo) {
+        return endUserAccountRepository.findByMobileNo(mobileNo);
     }
 }
