@@ -1,15 +1,14 @@
 package com.bipo.iac.service;
 
+import com.bipo.iac.model.*;
 import com.bipo.iac.exceptions.MobileRegisteredException;
-import com.bipo.iac.model.CompanyInformation;
-import com.bipo.iac.model.ContactInformation;
-import com.bipo.iac.model.CustomerAccount;
-import com.bipo.iac.model.EndUserAccount;
 import com.bipo.iac.repository.CustomerAccountRepository;
 import com.bipo.iac.repository.EndUserAccountRepository;
+import com.bipo.iac.repository.RegistrationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -20,23 +19,36 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private CustomerAccountRepository customerAccountRepository;
 
+    @Autowired
+    private RegistrationRepository registrationRepository;
+
     @Override
     public boolean process(CompanyInformation companyInformation, ContactInformation contactInformation) throws MobileRegisteredException {
-        CustomerAccount customerAccount = new CustomerAccount(companyInformation.getCompanyName(), companyInformation.getCompanyScale(), companyInformation.getCompanyAddress());
+        CustomerAccount customerAccount = new CustomerAccount(
+                companyInformation.getCompanyName(),
+                companyInformation.getCompanyScale(),
+                companyInformation.getCompanyAddress());
         customerAccountRepository.save(customerAccount);
 
-        EndUserAccount euAccount = findEUAByMobile(contactInformation.getMobile());
-        if (euAccount != null) {
+        Optional<EndUserAccount> endUserAccount = findEUAByMobile(contactInformation.getMobile());
+        if(endUserAccount.isPresent()){
             throw new MobileRegisteredException();
         }
-        EndUserAccount user = new EndUserAccount(contactInformation.getUserName(), contactInformation.getMobile(), contactInformation.getPassword());
-        endUserAccountRepository.save(user);
 
+        endUserAccountRepository.save(new EndUserAccount(
+                contactInformation.getUserName(),
+                contactInformation.getMobile(),
+                contactInformation.getPassword()));
         return true;
     }
 
     @Override
-    public EndUserAccount findEUAByMobile(String mobileNo) {
+    public Optional<EndUserAccount> findEUAByMobile(String mobileNo) {
         return endUserAccountRepository.findByMobileNo(mobileNo);
+    }
+
+    @Override
+    public void submit(Registration registration) {
+        registrationRepository.save(registration);
     }
 }

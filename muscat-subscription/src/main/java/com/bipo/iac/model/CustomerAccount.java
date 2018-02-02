@@ -1,7 +1,5 @@
 package com.bipo.iac.model;
 
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
-
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -1,18 +1,24 @@
 package com.bipo.iac.dto;
 
-public class RegistrationDTO {
+import java.io.Serializable;
 
-    private final String companyName;
+public class RegistrationDTO implements Serializable {
 
-    private final String companyScale;
+    private String companyName;
 
-    private final String companyAddress;
+    private String companyScale;
 
-    private final String userName;
+    private String companyAddress;
 
-    private final String password;
+    private String userName;
 
-    private final String mobileNo;
+    private String password;
+
+    private String mobileNo;
+
+    public RegistrationDTO() {
+
+    }
 
     public RegistrationDTO(String companyName, String companyScale, String companyAddress, String userName, String password, String mobileNo) {
         this.companyName = companyName;

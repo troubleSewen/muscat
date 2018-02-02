@@ -21,7 +21,7 @@ public class MuscatApplication {
         ApplicationContext ctx = SpringApplication.run(MuscatApplication.class, args);
         String[] activeProfiles = ctx.getEnvironment().getActiveProfiles();
         for (String profile : activeProfiles) {
-            System.out.println("Springboot on profile " + profile);
+            log.info("Spring-boot on profile " + profile);
         }
     }
 

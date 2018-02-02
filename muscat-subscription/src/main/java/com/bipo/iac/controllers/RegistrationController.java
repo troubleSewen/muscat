@@ -4,33 +4,38 @@ import com.bipo.iac.dto.RegistrationDTO;
 import com.bipo.iac.exceptions.MobileRegisteredException;
 import com.bipo.iac.model.CompanyInformation;
 import com.bipo.iac.model.ContactInformation;
+import com.bipo.iac.model.Registration;
 import com.bipo.iac.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 
 @RestController
+@RequestMapping(path = "/subscription")
 public class RegistrationController {
 
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(value = "/subscription/registration", method = RequestMethod.POST)
-    public ResponseEntity register(@RequestBody RegistrationDTO registrationDTO) {
+    @RequestMapping(value = "/registration", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> register(@RequestBody RegistrationDTO registrationDTO) {
+            // convert the registration dto to registration
+        accountService.submit(new Registration());
+
         try {
             CompanyInformation companyInformation = new CompanyInformation(registrationDTO);
             ContactInformation contactInformation = new ContactInformation(registrationDTO);
+            accountService.process(companyInformation, contactInformation);
 
-            if (accountService.process(companyInformation, contactInformation)) {
-                return ResponseEntity.ok().build();
-            }
         } catch (MobileRegisteredException e) {
-            return ResponseEntity.badRequest().build();
+
+            return new ResponseEntity(HttpStatus.CONFLICT);
         }
 
-        return ResponseEntity.badRequest().build();
+        return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 }
