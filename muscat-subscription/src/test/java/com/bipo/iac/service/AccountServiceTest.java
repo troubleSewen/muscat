@@ -3,10 +3,9 @@ package com.bipo.iac.service;
 import com.bipo.iac.PayloadHelper;
 import com.bipo.iac.dto.RegistrationDTO;
 import com.bipo.iac.exceptions.MobileRegisteredException;
-import com.bipo.iac.model.CompanyInformation;
-import com.bipo.iac.model.ContactInformation;
+import com.bipo.iac.model.Company;
+import com.bipo.iac.model.Contact;
 import com.bipo.iac.model.EndUserAccount;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,8 @@ public class AccountServiceTest {
     public void each_registration_should_produce_one_account() throws MobileRegisteredException {
         RegistrationDTO registrationDTO = PayloadHelper.fakeRegistrationDTO();
 
-        CompanyInformation companyInfo = new CompanyInformation(registrationDTO);
-        ContactInformation contactInfo = new ContactInformation(registrationDTO);
+        Company companyInfo = new Company(registrationDTO);
+        Contact contactInfo = new Contact(registrationDTO);
 
         accountService.process(companyInfo, contactInfo);
 

@@ -23,22 +23,22 @@ public class AccountServiceImpl implements AccountService {
     private RegistrationRepository registrationRepository;
 
     @Override
-    public boolean process(CompanyInformation companyInformation, ContactInformation contactInformation) throws MobileRegisteredException {
+    public boolean process(Company companyInformation, Contact contact) throws MobileRegisteredException {
         CustomerAccount customerAccount = new CustomerAccount(
                 companyInformation.getCompanyName(),
                 companyInformation.getCompanyScale(),
                 companyInformation.getCompanyAddress());
         customerAccountRepository.save(customerAccount);
 
-        Optional<EndUserAccount> endUserAccount = findEUAByMobile(contactInformation.getMobile());
+        Optional<EndUserAccount> endUserAccount = findEUAByMobile(contact.getMobile());
         if(endUserAccount.isPresent()){
             throw new MobileRegisteredException();
         }
 
         endUserAccountRepository.save(new EndUserAccount(
-                contactInformation.getUserName(),
-                contactInformation.getMobile(),
-                contactInformation.getPassword()));
+                contact.getUserName(),
+                contact.getMobile(),
+                contact.getPassword()));
         return true;
     }
 
